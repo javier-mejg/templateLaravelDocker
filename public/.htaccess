@@ -23,3 +23,9 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+# Restrict access to sensitive files
+<FilesMatch "^(\.env|docker-compose\.yml|Dockerfile)$">
+    order allow,deny
+    Deny from all
+</FilesMatch>
