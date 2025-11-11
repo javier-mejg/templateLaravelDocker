@@ -5,5 +5,7 @@ RUN apt-get update && apt-get install -y \
     git unzip libpng-dev libzip-dev libonig-dev libxml2-dev \
     && docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip \
     && rm -rf /var/lib/apt/lists/*
- 
+
+COPY overrides/vendor/dcblogdev/laravel-microsoft-graph/src/MsGraph.php /var/www/html/vendor/dcblogdev/laravel-microsoft-graph/src/MsGraph.php
+
 WORKDIR /var/www
