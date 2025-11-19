@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\Auth\AuthController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\ResultsController;
@@ -28,19 +27,8 @@ Route::get('/logout', function () {
     $logoutUrl = 'https://login.microsoftonline.com/common/oauth2/v2.0/logout?post_logout_redirect_uri=' . urlencode(url('/'));
     return redirect($logoutUrl);
 })->name('logout.microsoft');
+Route::group(['middleware' => ['web', 'MsGraphAuthenticated'], 'namespace' => 'App\Http\Controllers'], function () {
 
-
-// Route::get('/auth/microsoft/redirect', function () {
-//     return Socialite::driver('microsoft')
-//         ->scopes(config('services.microsoft.scopes', []))
-//         ->redirect();
-// })->name('microsoft.login');
-
-// Route::get('/auth/microsoft/callback', function () {
-//     $user = Socialite::driver('microsoft')->user();
-
-//     // Aquí puedes manejar la lógica de inicio de sesión o registro
-//     // dd($user);
-// });
-
-Route::get('/resultados',[ResultsController::class, 'index']);
+    Route::get('logout', 'App\Http\Controllers\Auth\AuthController@logout')->name('logout');
+    Route::get('/resultados',[ResultsController::class, 'index']);
+});

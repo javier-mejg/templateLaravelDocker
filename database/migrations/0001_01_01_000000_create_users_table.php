@@ -19,7 +19,7 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password')->nullable();
             $table->uuid('camp_uID')->default('31eec942-8945-4096-8815-b39e97f782c5');
-            $table->uuid('sta_uID')->default('f567f85f-096c-4173-ac41-6b624d7024d4');
+            $table->uuid(column: 'sta_uID')->default('f567f85f-096c-4173-ac41-6b624d7024d4');
             $table->rememberToken();
             $table->timestamps();
         });

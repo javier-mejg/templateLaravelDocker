@@ -1,0 +1,9 @@
+.card.border-dotted {
+    border: 3px dotted gainsboro !important;
+    background-clip: padding-box !important;
+}
+
+.card.border-round {
+    border-radius: 20px !important;
+    background-clip: padding-box !important;
+}

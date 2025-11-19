@@ -88,14 +88,15 @@
             <div class="col-md-4 offset-md-4 col-sm-10 offset-sm-1">
                 <div class="card">
                     <div class="card-body">
-                        <div class="text-center"> <img src="{{ url('/public/img/anahuac.png') }}"
+                        <div class="text-center"> <img src="{{ url('img/anahuac.png') }}"
                                 class="text-center logo-cefad m-3">
                             <p style="color:#dedede;font-family:Zilla Slab, serif;font-size: 1.2rem;font-weight: bold;">
                                 Resultados del Propedéutico</p>
-                            <a href="{{ route('connect')}}?redirect_to={{ urlencode(request()->query('redirect_to', '/resultados')) }}"
-                                class="btn btn-fff w-100 mt-2 mb-2"><img src="{{ url('/public/img/office.png') }}"
-                                    width="20px" class="ml-3 mr-3"><span class="ml-2">&nbsp;&nbsp;Iniciar
-                                    sesión</span></a>
+                            <a href="{{ route('connect') }}" class="btn btn-fff w-100 mt-2 mb-2"><img
+                                    src="https://cdn.icon-icons.com/icons2/1156/PNG/512/1486565573-microsoft-office_81557.png"
+                                    width="20px" class="ml-3 mr-3"><span class="ml-2">&nbsp;&nbsp;Iniciar sesión con
+                                    Office 365</span></a>
+
                         </div>
                         <?php
 $studentsURL = config('app.students_url');
