@@ -7,3 +7,7 @@
     border-radius: 20px !important;
     background-clip: padding-box !important;
 }
+
+.titulo-grande {
+    font-size: 6rem;
+}

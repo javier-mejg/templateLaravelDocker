@@ -614,7 +614,7 @@ JustGage = function(config) {
   // value
   obj.txtValue = obj.canvas.text(obj.params.valueX, obj.params.valueY, 0);
   obj.txtValue.attr({
-    "font-size": obj.params.valueFontSize,
+    "font-size": "40px",
     "font-weight": "bold",
     "font-family": obj.config.valueFontFamily,
     "fill": obj.config.valueFontColor,

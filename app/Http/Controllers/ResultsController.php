@@ -16,7 +16,7 @@ class ResultsController extends Controller
         $baseUrl = config('app.base_url');
         $url = "{$baseUrl}/api/propedeutico-med/estudiantes/resultados";
         $correo = base64_decode(Auth::user()->email);
-        $data=array();
+        $data = array();
 
         try {
             $response = Http::withHeaders([
@@ -27,11 +27,27 @@ class ResultsController extends Controller
                         'correo' => $correo,
                     ]);
 
-                $status = $response->status();
-                $data = $response->json();
-                $intento = 0;
-                return view('resultados', compact('data', 'titulo','status', 'intento'));
-           
+            $status = $response->status();
+            $data = $response->json();
+            // Normalización de datos
+            if (isset($data['resultados']) && is_array($data['resultados'])) {
+                // Ordenar de menor a mayor/ascendente
+                usort($data['resultados'], function ($a, $b) {
+                    return $a['periodo'] <=> $b['periodo']; // ascendente
+                });
+                // Cambiar cualquier valor que no sea 'Admitido' a 'No admitido' (útil por las decisiones con 'Segunda oportunidad' y no estandarizados)
+                foreach ($data['resultados'] as &$resultado) {
+                    if (isset($resultado['decision'])) {
+                        if ($resultado['decision'] !== 'Admitido') {
+                            $resultado['decision'] = 'No admitido';
+                        }
+                    }
+                }
+                unset($resultado);
+            }
+            $intento = 0;
+            return view('resultados', compact('data', 'titulo', 'status', 'intento'));
+
         } catch (\Exception $e) {
             return ['error' => 'No se puede enviar la información'];
         }
