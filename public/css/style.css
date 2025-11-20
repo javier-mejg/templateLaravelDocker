@@ -3147,7 +3147,7 @@ button.bg-primary:hover {
 .btn-primary:not(:disabled):not(.disabled):active,
 .btn-outline-primary:not(:disabled):not(.disabled).active,
 .btn-outline-primary:not(:disabled):not(.disabled):active {
-    background-color: hsl(21, 100%, 40%)!important;
+    background-color: hsl(21, 100%, 40%) !important;
     border-color: hsl(21, 100%, 40%);
 
 }
@@ -3592,7 +3592,7 @@ button.bg-secondary:hover {
     -webkit-box-shadow: 0 0 0 2px rgba(112, 67, 193, 0.3);
     box-shadow: 0 0 0 2px rgba(112, 67, 193, 0.3);
 }
- 
+
 
 /* button Outline */
 
@@ -11298,3 +11298,95 @@ input[type="number"]::-webkit-outer-spin-button {
 #comments-list>*:nth-child(even) {
     background-color: #00000008;
 }
+
+/* ====== SIDEBAR RESPONSIVE ====== */
+
+/* ===========================
+   MODO ESCRITORIO (sidebar vertical)
+   =========================== */
+@media (min-width: 992px) {
+    .responsive-sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 250px;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+        padding-top: 20px;
+        box-shadow: 2px 0 6px rgba(0, 0, 0, 0.15);
+        z-index: 1000;
+    }
+
+    /* Usuario pegado abajo en PC */
+    .responsive-sidebar .user-box {
+        margin-top: auto;
+        padding-bottom: 30px;
+    }
+
+    .main-content {
+        margin-left: 250px;
+        padding: 20px;
+    }
+    .size {
+        width: 400px;
+    }
+}
+
+
+/* ===========================
+   MODO MÓVIL (sidebar horizontal)
+   =========================== */
+@media (max-width: 991px) {
+    .responsive-sidebar {
+        position: relative;
+        width: 100%;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        /* <-- Alinea LOGO y USUARIO a la MISMA ALTURA */
+        justify-content: space-between;
+        padding: 10px 15px;
+        height: auto;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Logo en la izquierda */
+    .responsive-sidebar .logo-box {
+        padding: 0;
+        margin: 0;
+        display: flex;
+        align-items: center;
+    }
+
+    /* Usuario alineado a la derecha */
+    .responsive-sidebar .user-box {
+        padding: 0;
+        margin: 0;
+        position: static !important;
+        /* <-- Quita cualquier comportamiento extraño */
+        display: flex;
+        align-items: center;
+        /* <-- Misma altura */
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding: 20px;
+    }
+    .user-name {
+        display: none !important;
+    }
+
+    .logout-text {
+        display: none !important;
+    }
+
+    .responsive-sidebar .dropdown-toggle img {
+        margin-right: 0 !important; /* Quita espacio innecesario en móvil */
+    }
+    .size {
+        width:200px
+    }
+}
+

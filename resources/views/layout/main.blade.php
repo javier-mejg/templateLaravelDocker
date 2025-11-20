@@ -3,6 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>{{ $titulo }} | Propedéutico Medicina</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +16,7 @@
     <!-- Alertify JS -->
     <link href="{{ url('alertify/css/alertify.min.css') }}" rel="stylesheet" type="text/css" />
     <link href="{{ url('css/linea-dentada.css') }}" rel="stylesheet" type="text/css" />
-    
+
     <style>
         .container-fluid {
             padding-bottom: 20px;
@@ -45,11 +46,11 @@
 <body style="background: ghostwhite;">
 
     <!-- SIDEBAR VERTICAL -->
-    <div id="sidebar" class="bg-primary" style="width: 250px; min-height: 100vh; position: fixed; top:0; left:0; z-index: 1000;
-               box-shadow: 2px 0 6px rgba(0,0,0,0.15);">
+    <div id="sidebar" class="bg-primary responsive-sidebar">
+
 
         <!-- LOGO -->
-        <div class="text-center py-4">
+        <div class="text-center py-4 logo-box">
             <img src="{{ url('img/logos/anahuac-blanco.png') }}" alt="logo" style="max-width: 150px;">
         </div>
 
@@ -72,18 +73,17 @@
             </li>
 
         </ul> -->
-
-        <div class="mt-auto px-3 pb-4" style="position:absolute; bottom:0; width:100%;">
-            <!-- Dropdown Usuario -->
+        <!-- Usuario -->
+        <div class="px-3 pb-4 user-box">
             <div class="dropdown">
                 <a class="d-flex align-items-center text-white dropdown-toggle" data-toggle="dropdown" href="#"
                     role="button">
                     <img src="{{ url('img/user/leo_user.png') }}" class="rounded-circle bg-white mr-2"
                         style="width: 40px; height: 40px;">
-                    <span>{{ isset($data['info']['nombre']) ? $data['info']['nombre'] : "Usuario no registrado"}}</span>
+                    <span class="user-name">{{ isset($data['info']['nombre']) ? $data['info']['nombre'] : "Usuario no registrado"}}</span>
                 </a>
 
-                <div class="dropdown-menu dropdown-menu-left mt-2">
+                <div class="dropdown-menu dropdown-menu-right mt-2">
                     <form method="GET" action="{{ route('logout') }}" onsubmit="cerrar_sesion(event)">
                         @csrf
                         <button type="submit" class="dropdown-item button">
@@ -94,10 +94,11 @@
             </div>
         </div>
 
+
     </div>
 
     <!-- CONTENIDO PRINCIPAL -->
-    <div style="margin-left: 250px; padding: 20px;">
+    <div class="main-content">
         <!-- Loader de página -->
         <div class="div-loader" id="loader">
             <div class="loader"></div>
@@ -127,12 +128,7 @@
         });
 
         function cerrar_sesion(event) {
-            event.preventDefault();
-            alertify.confirm('Resultados del Propedéutico de Medicina 💊',
-                '¿Realmente quieres cerrar tu sesión ahora?',
-                function () { document.forms[0].submit(); },
-                function () { }
-            ).set('labels', { ok: 'Si, cerrar', cancel: 'No' });
+            
         }
 
         alertify.defaults.transition = "slide";

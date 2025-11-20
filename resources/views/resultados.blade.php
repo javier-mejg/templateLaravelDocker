@@ -7,59 +7,61 @@
 
 @section('content')
     @if ($status == 200)
+        <div class="row justify-content-center">
+            <h1>Bienvenido a tus resultados, {{ $data['info']['nombre'] }}</h1>
+        </div>
 
         @php $intento = 0; @endphp
 
-        <div class="row justify-content-center">
-            <h1>Bienvenido {{ $data['info']['nombre'] }}</h1>
-        </div>
-        <div class="row justify-content-center mb-4">
-            <h2 style="color: gray">Matrícula: {{ $data['info']['matricula'] }}</h2>
-        </div>
+        <div class="row mb-4 justify-content-center">
 
-        <div class="row mb-4 ml-2 justify-content-center">
-
-            {{-- 📌 Recorremos los resultados --}}
+            {{-- Recorremos los resultados --}}
             @foreach ($data['resultados'] as $resultado)
                 @php $intento++; @endphp
 
-                <div class="card ml-5 px-0 border-round" style="width: 40rem;">
-                    <div class="card-body ">
-                        <div class="row">
-                            <div class="card border-round ml-2 px-3 align-items-center" style="background: #ff5900">
-                                <h3 class="card-title" style="color: white"><strong>Intento {{ $intento }}</strong></h3>
+                <div class="form-group col-md-6 mb-4 px-3">
+                    <div class="card px-0 border-round h-100">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="card border-round px-3 align-items-center" style="background: #ff5900">
+                                    <h3 class="card-title text-white">
+                                        <strong>Intento {{ $intento }}</strong>
+                                    </h3>
+                                </div>
                             </div>
-                        </div>
 
-                        <h6 class="card-subtitle mb-2 text-muted">Periodo: {{ $resultado['periodo'] }}</h6>
+                            <h6 class="card-subtitle mb-2 text-muted">
+                                Periodo: {{ $resultado['periodo'] }}
+                            </h6>
 
-                        <div class="row pt-0 pb-0">
-                            <div class="card-body text-center">
-                                <h2><strong>Puntaje</strong></h2>
+                            <div class="row">
+                                <div class="col text-center">
+                                    <h2><strong>Puntaje</strong></h2>
+                                </div>
+                                <div class="col text-center">
+                                    <h2><strong>Lugar</strong></h2>
+                                </div>
                             </div>
-                            <div class="card-body text-center">
-                                <h2><strong>Lugar</strong></h2>
-                            </div>
-                        </div>
 
-                        <div class="row ml-2 pb-5">
-                            <div class="col-6 d-flex flex-column justify-content-center align-items-center">
-                                {{-- 📌 Aquí se imprime la gráfica --}}
-                                <div id="GraphPuntuacion{{ $intento }}" style="width: 155px; height: 140px;"></div>
+                            <div class="row pb-4">
+                                <div class="col-6 d-flex flex-column justify-content-center align-items-center">
+                                    <div id="GraphPuntuacion{{ $intento }}" style="width: 155px; height: 140px;"></div>
+                                </div>
+                                <div class="col-6 d-flex flex-column justify-content-center align-items-center">
+                                    <h1 class="titulo-grande" style="color: #ff5900;">
+                                        <strong>#{{ $resultado['lugar'] }}</strong>
+                                    </h1>
+                                </div>
                             </div>
-                            <div class="col-6 d-flex flex-column justify-content-center align-items-center">
-                                <h1 class="titulo-grande" style="color: #ff5900;">
-                                    <strong>#{{ $resultado['lugar'] }}</strong>
-                                </h1>
-                            </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="card" style="width: 14rem;">
-                                <div class="card-body">
-                                    <h6 class="card-subtitle mb-2 text-muted">Decisión:</h6>
-                                    <h2 class="card-title"
-                                        style="color: {{ $resultado['decision'] == 'Admitido' ? '#ff5900' : 'red' }}">
+                            <div class="row">
+                                <div class="col-12 text-center">
+                                    <h2 class="card-title">
+                                        @if ($resultado['decision'] == 'Admitido')
+                                            <i class="bi bi-check-circle-fill text-success"></i>
+                                        @else
+                                            <i class="bi bi-x-circle-fill text-danger"></i>
+                                        @endif
                                         {{ $resultado['decision'] }}
                                     </h2>
                                 </div>
@@ -68,16 +70,109 @@
                     </div>
                 </div>
 
-                {{-- 📌 Guardamos datos para JustGage en JS --}}
+                {{-- Datos para JustGage --}}
                 <script>
                     window.graficas = window.graficas || [];
                     window.graficas.push({
                         id: "GraphPuntuacion{{ $intento }}",
                         valor: {{ $resultado['puntaje'] * 10 }}
-                                });
+                                                                                                                                                                                                        });
                 </script>
-
             @endforeach
+
+            {{-- Card placeholder si falta intento --}}
+            @if ($intento < 2)
+                <div class="form-group col-md-6 mb-4 px-3">
+                    <div class="card px-0 border-round border-dotted bg-transparent h-100">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="card border-round px-3 align-items-center" style="background: #ff5900">
+                                    <h3 class="card-title text-white">
+                                        <strong>Intento {{ $intento + 1 }}</strong>
+                                    </h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+        </div>
+
+        {{-- MENSAJES FINALES --}}
+        <div class="row justify-content-center mb-4">
+
+            @if ($resultado['decision'] == 'Admitido')
+                <div class="form-group col-12 mb-4 px-3">
+                    <div class="card px-0 border-round success h-100">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+
+                                {{-- TEXTO --}}
+                                <div class="col-12 col-md-8">
+                                    <h2 class="ml-2"><strong>¡Felicidades!</strong></h2>
+                                    <h4 class="ml-2">Tienes todo lo necesario para ser un león.</h4>
+                                </div>
+
+                                {{-- IMAGEN --}}
+                                <div class="col-12 col-md-4 text-center text-md-right mt-3 mt-md-0">
+                                    <img class="size img-fluid" src="{{ url('img/leo/leo_success.png') }}">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+
+            @if ($resultado['decision'] == 'No admitido' && $intento < 2)
+                <div class="form-group col-12 mb-4 px-3">
+                    <div class="card px-0 border-round retry h-100">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+
+                                {{-- TEXTO --}}
+                                <div class="col-12 col-md-8">
+                                    <h2 class="ml-2"><strong>¡No te rindas!</strong></h2>
+                                    <h4 class="ml-2">Todavía tienes oportunidad para tomar el curso propedéutico una vez más.</h4>
+                                </div>
+
+                                {{-- IMAGEN (opcional) --}}
+                                <div class="col-12 col-md-4 text-center text-md-right mt-3 mt-md-0">
+                                    <img class="size img-fluid" src="{{ url('img/leo/leo_retry.png') }}">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
+
+            @if ($resultado['decision'] == 'No admitido' && $intento > 1)
+                <div class="form-group col-12 mb-4 px-3">
+                    <div class="card px-0 border-round fail h-100">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+
+                                {{-- TEXTO --}}
+                                <div class="col-12 col-md-8">
+                                    <h2 class="ml-2"><strong>Se acabaron tus oportunidades...</strong></h2>
+                                    <h4 class="ml-2">Bien intentado, pero lamentablemente se acabaron tus intentos.</h4>
+                                </div>
+
+                                {{-- IMAGEN (opcional) --}}
+                                <div class="col-12 col-md-4 text-center text-md-right mt-3 mt-md-0">
+                                    <img class="size img-fluid" src="{{ url('img/leo/leo_fail.png') }}">
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif
+
 
         </div>
 
@@ -94,7 +189,6 @@
     <script src="plugins/justgage/raphael-2.1.4.min.js"></script>
 
     <script>
-        // Esperamos a que el DOM exista
         document.addEventListener("DOMContentLoaded", function () {
             if (!window.graficas) return;
 
