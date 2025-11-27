@@ -81,7 +81,7 @@
             @endforeach
 
             {{-- Card placeholder si falta intento --}}
-            @if ($intento < 2)
+            @if (($intento < 2) && ($resultado['decision'] != 'Admitido'))
                 <div class="form-group col-md-6 mb-4 px-3">
                     <div class="card px-0 border-round border-dotted bg-transparent h-100">
                         <div class="card-body">
@@ -110,8 +110,8 @@
 
                                 {{-- TEXTO --}}
                                 <div class="col-12 col-md-8">
-                                    <h2 class="ml-2"><strong>¡Felicidades!</strong></h2>
-                                    <h4 class="ml-2">Tienes todo lo necesario para ser un león.</h4>
+                                    <h2 class="ml-2 text-size-title"><strong>¡Felicidades!</strong></h2>
+                                    <h4 class="ml-2 text-size-subtitle">Tienes todo lo necesario para ser un león.</h4>
                                 </div>
 
                                 {{-- IMAGEN --}}
@@ -134,8 +134,8 @@
 
                                 {{-- TEXTO --}}
                                 <div class="col-12 col-md-8">
-                                    <h2 class="ml-2"><strong>¡No te rindas!</strong></h2>
-                                    <h4 class="ml-2">Todavía tienes oportunidad para tomar el curso propedéutico una vez más.</h4>
+                                    <h2 class="ml-2 text-size-title"><strong>¡No te rindas!</strong></h2>
+                                    <h4 class="ml-2 text-size-subtitle">Todavía tienes oportunidad para tomar el curso propedéutico una vez más.</h4>
                                 </div>
 
                                 {{-- IMAGEN (opcional) --}}
@@ -158,8 +158,8 @@
 
                                 {{-- TEXTO --}}
                                 <div class="col-12 col-md-8">
-                                    <h2 class="ml-2"><strong>Se acabaron tus oportunidades...</strong></h2>
-                                    <h4 class="ml-2">Bien intentado, pero lamentablemente se acabaron tus intentos.</h4>
+                                    <h2 class="ml-2 text-size-title"><strong>Se acabaron tus oportunidades...</strong></h2>
+                                    <h4 class="ml-2 text-size-subtitle">Bien intentado, pero lamentablemente se acabaron tus intentos.</h4>
                                 </div>
 
                                 {{-- IMAGEN (opcional) --}}

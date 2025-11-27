@@ -98,7 +98,7 @@
     </div>
 
     <!-- CONTENIDO PRINCIPAL -->
-    <div class="main-content">
+    <div class="main-content escala">
         <!-- Loader de página -->
         <div class="div-loader" id="loader">
             <div class="loader"></div>

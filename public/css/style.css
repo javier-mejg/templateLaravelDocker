@@ -11328,9 +11328,28 @@ input[type="number"]::-webkit-outer-spin-button {
         margin-left: 250px;
         padding: 20px;
     }
+
     .size {
-        width: 400px;
+        width: 280px;
     }
+
+    .text-size-title {
+        font-size: 3.3rem;
+    }
+
+    .text-size-subtitle {
+        font-size: 2.7rem;
+    }
+
+    .escala {
+        transform: scale(0.9);
+        /* 1 = normal, 1.3 = 130%, 0.8 = 80% */
+        transform-origin: top left;
+        /* Opcional: desde dónde escala */
+        width: calc(100% * 0.9);
+        height: calc(100% * 0.9);
+    }
+
 }
 
 
@@ -11374,6 +11393,7 @@ input[type="number"]::-webkit-outer-spin-button {
         margin-left: 0;
         padding: 20px;
     }
+
     .user-name {
         display: none !important;
     }
@@ -11383,10 +11403,11 @@ input[type="number"]::-webkit-outer-spin-button {
     }
 
     .responsive-sidebar .dropdown-toggle img {
-        margin-right: 0 !important; /* Quita espacio innecesario en móvil */
+        margin-right: 0 !important;
+        /* Quita espacio innecesario en móvil */
     }
+
     .size {
-        width:200px
+        width: 200px
     }
 }
-
