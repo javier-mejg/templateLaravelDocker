@@ -54,25 +54,6 @@
             <img src="{{ url('img/logos/anahuac-blanco.png') }}" alt="logo" style="max-width: 150px;">
         </div>
 
-        <!-- LÍNEA DIVISORA -->
-        <!-- <hr class="border-light" style="opacity: .2;"> -->
-
-        <!-- MENÚ -->
-        <!-- <ul class="nav flex-column px-3">
-
-            <li class="nav-item mb-2">
-                <a href="{{ url('/') }}" class="nav-link text-white">🏠 Inicio</a>
-            </li>
-
-            <li class="nav-item mb-2">
-                <a href="#" class="nav-link text-white">📄 Registros</a>
-            </li>
-
-            <li class="nav-item mb-2">
-                <a href="#" class="nav-link text-white">⚙ Configuración</a>
-            </li>
-
-        </ul> -->
         <!-- Usuario -->
         <div class="px-3 pb-4 user-box">
             <div class="dropdown">
