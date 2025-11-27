@@ -1,0 +1,78 @@
+version: "3.9"
+
+services: # Cada servicio es un contenedor dentro del proyecto
+  app:
+    # Para Macs M1/M2 puedes dejar esto así
+    # Si a otro dev no le funciona, puede comentar esta línea
+    platform: linux/arm64
+
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    working_dir: /var/www
+
+    volumes:
+      - ./:/var/www # Código en vivo para desarrollo
+
+    depends_on:
+      - db
+
+  web:
+    platform: linux/arm64
+    image: nginx:alpine
+
+    depends_on:
+      - app
+
+    ports:
+      - "${APP_HTTP_PORT:-8180}:80"
+
+    volumes:
+      - ./:/var/www
+      - ./docker/nginx/app.conf:/etc/nginx/conf.d/default.conf:ro
+
+  db:
+    platform: linux/arm64
+    image: mariadb:11
+
+    environment:
+      MYSQL_DATABASE: ${DB_DATABASE}
+      MYSQL_USER: ${DB_USERNAME}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      MYSQL_ROOT_PASSWORD: root
+
+    ports:
+      - "${DB_FORWARD_PORT:-3307}:3306"
+
+    volumes:
+      - dbdata:/var/lib/mysql
+
+  pma:
+    platform: linux/arm64
+    image: adminer:latest
+
+    environment:
+      ADMINER_DEFAULT_SERVER: db
+
+    depends_on:
+      - db
+
+    ports:
+      - "${ADMINER_PORT:-8081}:8080"
+
+  composer:
+    platform: linux/arm64
+    image: composer:2
+
+    working_dir: /var/www
+
+    volumes:
+      - ./:/var/www
+
+volumes:
+  dbdata:
+
+networks:
+  default:
+    name: propedeutico-net

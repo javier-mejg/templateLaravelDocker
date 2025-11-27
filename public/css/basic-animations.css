@@ -1,0 +1,55 @@
+    .pulse {
+      animation: pulse-animation 1100ms infinite;
+    }
+
+    @keyframes pulse-animation {
+      0% {
+        box-shadow: 0 0 0 0px rgba(68, 68, 68, 0.15);
+      }
+      100% {
+        box-shadow: 0 0 0 8px rgba(0, 0, 0, 0);
+      }
+    }
+
+    .breathing {
+      -webkit-animation: breathing 2500ms ease-out infinite normal;
+      animation: breathing 2500ms ease-out infinite normal;
+    }
+
+    @-webkit-keyframes breathing {
+      0% {
+        -webkit-transform: scale(0.8);
+        transform: scale(0.8);
+      }
+    
+      50% {
+        -webkit-transform: scale(1);
+        transform: scale(1);
+      }
+    
+      100% {
+        -webkit-transform: scale(0.8);
+        transform: scale(0.8);
+      }
+    }
+
+    @keyframes breathing {
+      0% {
+        -webkit-transform: scale(0.8);
+        -ms-transform: scale(0.8);
+        transform: scale(0.8);
+      }
+    
+      50% {
+        -webkit-transform: scale(1);
+        -ms-transform: scale(1);
+        transform: scale(1);
+      }
+    
+      100% {
+        -webkit-transform: scale(0.8);
+        -ms-transform: scale(0.8);
+        transform: scale(0.8);
+      }
+    
+    }

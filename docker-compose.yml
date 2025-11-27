@@ -1,72 +1,42 @@
+version: "3.9"
+
 services:
   app:
-    platform: linux/arm64
+    image: tu-registro/propedeutico-app:latest
+    restart: always
 
-    build:
-      context: .
+    env_file:
+      - .env # En Azure normalmente configuras las env vars en el portal, pero esto sirve para pruebas
 
-      dockerfile: Dockerfile
+    environment:
+      # En producción sobreescribes estas con los datos de la DB gestionada en Azure
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USERNAME: ${DB_USERNAME}
+      DB_PASSWORD: ${DB_PASSWORD}
 
-    volumes:
-      - ./:/var/www
+      APP_ENV: production
+      APP_DEBUG: false
+      APP_URL: ${APP_URL}
+      BASE_URL: ${BASE_URL}
 
-    depends_on:
-      - db
+    networks:
+      - propedeutico-net
 
   web:
-    platform: linux/arm64
-    image: nginx:alpine
-    ports:
-      - "8180:80"
-    volumes:
-      - ./:/var/www
-      - ./docker/nginx/app.conf:/etc/nginx/conf.d/default.conf:ro
+    image: tu-registro/propedeutico-web:latest
+    restart: always
+
     depends_on:
       - app
 
-  db:
-    platform: linux/arm64
-
-    image: mariadb:11
-
-    environment:
-      MYSQL_DATABASE: propedeutico
-
-      MYSQL_USER: propedeutico
-
-      MYSQL_PASSWORD: secret
-
-      MYSQL_ROOT_PASSWORD: root
-
     ports:
-      - "3307:3306" # no choca con 3306
+      - "80:80" # En Azure normalmente el contenedor expone 80 y la plataforma lo publica
 
-    volumes:
-      - dbdata:/var/lib/mysql
-
-  pma:
-    platform: linux/arm64
-    image: adminer:latest
-    environment:
-      ADMINER_DEFAULT_SERVER: db
-    ports:
-      - "8081:8080" # Adminer expone 8080
-    depends_on:
-      - db
-
-  composer:
-    platform: linux/arm64
-
-    image: composer:2
-
-    working_dir: /var/www
-
-    volumes:
-      - ./:/var/www
-
-volumes:
-  dbdata:
+    networks:
+      - propedeutico-net
 
 networks:
-  default:
-    name: propedeutico-net
+  propedeutico-net:
+    external: false

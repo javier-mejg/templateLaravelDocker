@@ -1,0 +1,43 @@
+.card.border-dotted {
+    border: 3px dashed gainsboro !important;
+    background-clip: padding-box !important;
+}
+
+.card.border-round {
+    border-radius: 20px !important;
+    background-clip: padding-box !important;
+}
+
+.titulo-grande {
+    font-size: 6rem;
+}
+
+.card.success {
+    background-color: rgba(0, 255, 0, 0.24);
+    border: 3px solid rgba(0, 128, 0, 0.486);
+    color: rgb(22, 140, 11);
+}
+
+.card.retry {
+    background-color: rgba(136, 0, 255, 0.187);
+    border: 3px solid rgba(136, 0, 255, 0.313);
+    color: rgb(136, 0, 255);
+}
+
+.card.fail {
+    background-color: rgba(55, 53, 53, 0.24);
+    border: 3px solid rgba(55, 53, 53, 0.9);
+    color: rgb(55, 53, 53);
+}
+
+.success{
+    color: rgb(22, 140, 11);
+}
+
+.text-retry {
+    color: rgb(136, 0, 255);
+}
+
+.text-fail {
+    color: rgb(55, 53, 53);
+}
