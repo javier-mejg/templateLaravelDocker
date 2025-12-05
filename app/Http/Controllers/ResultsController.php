@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Http;
+use App\Mail\RedactarCorreoMailable;
 use Auth;
 
 
@@ -11,6 +13,7 @@ class ResultsController extends Controller
 {
     public function index()
     {
+        $correo_apelaciones = "javier_mejia@anahuac.mx"; // propedeutico.qro@anahuac.mx
         $titulo = 'Resultados';
         $apiKey = "@Qu3r3Dev!T1-Ana";
         $baseUrl = config('app.base_url');
@@ -44,13 +47,47 @@ class ResultsController extends Controller
                     }
                 }
                 unset($resultado);
+
+                $periodos = array_unique(array_column($data['resultados'], 'periodo'));
             }
             $intento = 0;
-            return view('resultados', compact('data', 'titulo', 'status', 'intento'));
+            return view('resultados', compact('data', 'titulo', 'status', 'intento', 'correo_apelaciones', 'periodos'));
 
         } catch (\Exception $e) {
             return ['error' => 'No se puede enviar la información'];
         }
     }
+    public function enviarCorreo(Request $request)
+    {
+        // Validación
+        $data = $request->validate([
+            'correo_apelaciones' => 'required|email',
+            'periodo' => 'required|string',
+            'comentarios' => 'required|string',
+        ]);
+
+        try {
+            Mail::to($data['correo_apelaciones'])
+                ->send(new RedactarCorreoMailable($data['periodo'], $data['comentarios']));
+
+            return response()->json([
+                'ok' => true,
+                'mensaje' => 'El correo se envió correctamente.',
+            ]);
+        } catch (\Throwable $th) {
+            // 👇 LOG para ver el error en laravel.log
+            \Log::error('Error enviando correo', [
+                'message' => $th->getMessage(),
+                'trace' => $th->getTraceAsString(),
+            ]);
+
+            // 👇 TEMPORAL para que tú lo veas directo en el navegador (local)
+            return response()->json([
+                'ok' => false,
+                'mensaje' => $th->getMessage(), // <- en vez del texto genérico
+            ], 500);
+        }
+    }
+
 }
 

@@ -123,6 +123,6 @@ return [
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
 
-    'base_url' => env('BASE_URL', 'https://qa-soyleonadmin.anahuac-qro.com')
+    'base_url' => env('BASE_URL')
 
 ];

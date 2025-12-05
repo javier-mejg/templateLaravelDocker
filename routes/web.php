@@ -30,5 +30,7 @@ Route::get('/logout', function () {
 Route::group(['middleware' => ['web', 'MsGraphAuthenticated'], 'namespace' => 'App\Http\Controllers'], function () {
 
     Route::get('logout', 'App\Http\Controllers\Auth\AuthController@logout')->name('logout');
-    Route::get('/resultados',[ResultsController::class, 'index']);
+    Route::get('/resultados', [ResultsController::class, 'index'])->name('resultados.index');
+    // Antes la tenías como GET:
+    Route::post('/resultados/correo', [ResultsController::class, 'enviarCorreo'])->name('resultados.correo');
 });

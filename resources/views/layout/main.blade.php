@@ -61,7 +61,7 @@
                     role="button">
                     <img src="{{ url('img/user/leo_user.png') }}" class="rounded-circle bg-white mr-2"
                         style="width: 40px; height: 40px;">
-                    <span class="user-name">{{ isset($data['info']['nombre']) ? $data['info']['nombre'] : "Usuario no registrado"}}</span>
+                    <span class="user-name">{{ isset($data['info']['nombre']) ? $data['info']['nombre'] : Crypt::decryptString(Auth::user()->name)}}</span>
                 </a>
 
                 <div class="dropdown-menu dropdown-menu-right mt-2">

@@ -8,7 +8,7 @@
 @section('content')
     @if ($status == 200)
         <div class="row justify-content-center">
-            <h1>Bienvenido a tus resultados, {{ $data['info']['nombre'] }}</h1>
+            <h1>Bienvenido a tus resultados, {{ $data['info']['nombre'] }} [{{ $data['info']['matricula'] }}]</h1>
         </div>
 
         @php $intento = 0; @endphp
@@ -76,7 +76,7 @@
                     window.graficas.push({
                         id: "GraphPuntuacion{{ $intento }}",
                         valor: {{ $resultado['puntaje'] * 10 }}
-                                                                                                                                                                                                        });
+                                                                                                                                                                                                                                                                                            });
                 </script>
             @endforeach
 
@@ -135,8 +135,14 @@
                                 {{-- TEXTO --}}
                                 <div class="col-12 col-md-8">
                                     <h2 class="ml-2 text-size-title"><strong>¡No te rindas!</strong></h2>
-                                    <h4 class="ml-2 text-size-subtitle">Todavía tienes oportunidad para tomar el curso propedéutico una vez más.</h4>
+                                    <h4 class="ml-2 text-size-subtitle">Todavía tienes oportunidad para tomar el curso propedéutico
+                                        una vez más.</h4>
+                                    {{-- Botón que abre el modal --}}
+                                    <button type="button" class="btn btn-primary btn-abrir-modal-redactar">
+                                        Redactar correo
+                                    </button>
                                 </div>
+
 
                                 {{-- IMAGEN (opcional) --}}
                                 <div class="col-12 col-md-4 text-center text-md-right mt-3 mt-md-0">
@@ -159,7 +165,14 @@
                                 {{-- TEXTO --}}
                                 <div class="col-12 col-md-8">
                                     <h2 class="ml-2 text-size-title"><strong>Se acabaron tus oportunidades...</strong></h2>
-                                    <h4 class="ml-2 text-size-subtitle">Bien intentado, pero lamentablemente se acabaron tus intentos.</h4>
+                                    <h4 class="ml-2 text-size-subtitle">Bien intentado, pero lamentablemente se acabaron tus
+                                        intentos.</h4>
+                                    <h3 class="ml-2 ">¿Tienes alguna duda o no estás de acuerdo con tus resulados?
+                                        Envía un correo a {{ $correo_apelaciones }}</h4>
+                                        {{-- Botón que abre el modal --}}
+                                        <button type="button" class="btn btn-primary btn-abrir-modal-redactar">
+                                            Redactar correo
+                                        </button>
                                 </div>
 
                                 {{-- IMAGEN (opcional) --}}
@@ -178,9 +191,33 @@
 
     @else
         <div class="row justify-content-center">
-            <h1>No existe información sobre este usuario</h1>
+            <div class="form-group col-12 mb-4 px-3">
+                <div class="card px-0 border-round fail h-100">
+                    <div class="card-body">
+                        <div class="row align-items-center">
+
+                            {{-- TEXTO --}}
+                            <div class="col-12 col-md-8">
+                                <h2 class="ml-2 text-size-title"><strong>Lo sentimos...</strong></h2>
+                                <h4 class="ml-2 text-size-subtitle">No encontramos información para tu usuario, contacta a
+                                    tatiana.rivera@anahuac.mx
+                                    para validar la información.</h4>
+                            </div>
+
+                            {{-- IMAGEN (opcional) --}}
+                            <div class="col-12 col-md-4 text-center text-md-right mt-3 mt-md-0">
+                                <img class="size img-fluid" src="{{ url('img/leo/leo_fail.png') }}">
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+
     @endif
+    <x-modal-email :correoApelaciones="$correo_apelaciones" :periodos="$periodos" :action="route('resultados.correo')" />
+
 @endsection
 
 
@@ -208,4 +245,95 @@
             });
         });
     </script>
+    {{-- JS del componente --}}
+    <script>
+        (function () {
+            const buttonsAbrirModal = document.querySelectorAll('.btn-abrir-modal-redactar');
+            const modalOverlay = document.getElementById('modal-redactar-overlay');
+            const btnCancelar = document.getElementById('btn-cancelar-modal');
+            const form = document.getElementById('form-redactar-correo');
+            const selectPeriodo = document.getElementById('select-periodo');
+            const textareaComentarios = document.getElementById('textarea-comentarios');
+
+            const alertaOverlay = document.getElementById('alerta-overlay');
+            const alertaMensaje = document.getElementById('alerta-mensaje');
+            const btnAlertaAceptar = document.getElementById('btn-alerta-aceptar');
+
+            const urlEnvio = "{{ route('resultados.correo') }}";
+            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            // Mostrar modal desde cualquier botón
+            buttonsAbrirModal.forEach(btn => {
+                btn.addEventListener('click', function () {
+                    modalOverlay.style.display = 'flex';
+                });
+            });
+
+            // Cancelar modal
+            btnCancelar.addEventListener('click', function () {
+                modalOverlay.style.display = 'none';
+            });
+
+            // Cerrar alerta
+            btnAlertaAceptar.addEventListener('click', function () {
+                alertaOverlay.style.display = 'none';
+            });
+
+            // Envío del formulario
+            form.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                const periodo = selectPeriodo.value.trim();
+                const comentarios = textareaComentarios.value.trim();
+
+                if (!periodo) {
+                    mostrarAlerta('Debes seleccionar un periodo.');
+                    return;
+                }
+
+                if (!comentarios) {
+                    mostrarAlerta('Debes escribir comentarios.');
+                    return;
+                }
+
+                try {
+                    const formData = new FormData(form);
+
+                    const resp = await fetch(urlEnvio, {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRF-TOKEN': token,
+                            'Accept': 'application/json',
+                        },
+                        body: formData,
+                    });
+
+                    const data = await resp.json();
+
+                    // Cerrar modal
+                    modalOverlay.style.display = 'none';
+
+                    // Limpiar formulario
+                    selectPeriodo.value = '';
+                    textareaComentarios.value = '';
+
+                    if (data.ok) {
+                        mostrarAlerta(data.mensaje || 'El correo se envió correctamente.');
+                    } else {
+                        mostrarAlerta(data.mensaje || 'No se pudo enviar el correo.');
+                    }
+
+                } catch (error) {
+                    modalOverlay.style.display = 'none';
+                    mostrarAlerta('Ocurrió un error inesperado al enviar el correo.');
+                }
+            });
+
+            function mostrarAlerta(mensaje) {
+                alertaMensaje.textContent = mensaje;
+                alertaOverlay.style.display = 'flex';
+            }
+        })();
+    </script>
+
 @endsection
