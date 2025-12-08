@@ -64,30 +64,40 @@ class ResultsController extends Controller
             'correo_apelaciones' => 'required|email',
             'periodo' => 'required|string',
             'comentarios' => 'required|string',
+            'nombre_usuario' => 'required|string',
+            'id_usuario' => 'required|string',
+            'correo_usuario' => 'required|email',
         ]);
 
         try {
             Mail::to($data['correo_apelaciones'])
-                ->send(new RedactarCorreoMailable($data['periodo'], $data['comentarios']));
+                ->send(new RedactarCorreoMailable(
+                    $data['periodo'],
+                    $data['comentarios'],
+                    $data['nombre_usuario'],
+                    $data['id_usuario'],
+                    $data['correo_usuario'],
+                ));
 
             return response()->json([
-                'ok' => true,
-                'mensaje' => 'El correo se envió correctamente.',
+                'status' => 'success',
+                'message' => 'El correo se envió correctamente.',
             ]);
+
         } catch (\Throwable $th) {
-            // 👇 LOG para ver el error en laravel.log
             \Log::error('Error enviando correo', [
                 'message' => $th->getMessage(),
                 'trace' => $th->getTraceAsString(),
             ]);
 
-            // 👇 TEMPORAL para que tú lo veas directo en el navegador (local)
             return response()->json([
-                'ok' => false,
-                'mensaje' => $th->getMessage(), // <- en vez del texto genérico
+                'status' => 'error',
+                'message' => $th->getMessage(),
             ], 500);
+
         }
     }
+
 
 }
 

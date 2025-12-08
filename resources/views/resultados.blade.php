@@ -76,7 +76,7 @@
                     window.graficas.push({
                         id: "GraphPuntuacion{{ $intento }}",
                         valor: {{ $resultado['puntaje'] * 10 }}
-                                                                                                                                                                                                                                                                                            });
+                                                                                                                                                                                                                                                                                                                                                        });
                 </script>
             @endforeach
 
@@ -138,7 +138,7 @@
                                     <h4 class="ml-2 text-size-subtitle">Todavía tienes oportunidad para tomar el curso propedéutico
                                         una vez más.</h4>
                                     {{-- Botón que abre el modal --}}
-                                    <button type="button" class="btn btn-primary btn-abrir-modal-redactar">
+                                    <button type="button" class="btn ml-2 btn-primary btn-abrir-modal-redactar">
                                         Redactar correo
                                     </button>
                                 </div>
@@ -170,9 +170,12 @@
                                     <h3 class="ml-2 ">¿Tienes alguna duda o no estás de acuerdo con tus resulados?
                                         Envía un correo a {{ $correo_apelaciones }}</h4>
                                         {{-- Botón que abre el modal --}}
-                                        <button type="button" class="btn btn-primary btn-abrir-modal-redactar">
-                                            Redactar correo
-                                        </button>
+                                        <div class="row justify-content-center mb-4">
+                                            <button type="button" class="btn btn-primary btn-abrir-modal-redactar">
+                                                Redactar correo
+                                            </button>
+                                        </div>
+
                                 </div>
 
                                 {{-- IMAGEN (opcional) --}}
@@ -216,7 +219,12 @@
         </div>
 
     @endif
-    <x-modal-email :correoApelaciones="$correo_apelaciones" :periodos="$periodos" :action="route('resultados.correo')" />
+    <x-modal-email :correoApelaciones="$correo_apelaciones" :periodos="$periodos" :action="route('resultados.correo')"
+        :nombreUsuario="$data['info']['nombre'] ?? null" :idUsuario="$data['info']['matricula']"
+        :correoUsuario="$data['resultados'][0]['correo'] ?? null" />
+
+    
+
 
 @endsection
 
@@ -255,9 +263,7 @@
             const selectPeriodo = document.getElementById('select-periodo');
             const textareaComentarios = document.getElementById('textarea-comentarios');
 
-            const alertaOverlay = document.getElementById('alerta-overlay');
-            const alertaMensaje = document.getElementById('alerta-mensaje');
-            const btnAlertaAceptar = document.getElementById('btn-alerta-aceptar');
+            const loader = document.getElementById('loader');
 
             const urlEnvio = "{{ route('resultados.correo') }}";
             const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
@@ -274,10 +280,6 @@
                 modalOverlay.style.display = 'none';
             });
 
-            // Cerrar alerta
-            btnAlertaAceptar.addEventListener('click', function () {
-                alertaOverlay.style.display = 'none';
-            });
 
             // Envío del formulario
             form.addEventListener('submit', async function (e) {
@@ -287,13 +289,28 @@
                 const comentarios = textareaComentarios.value.trim();
 
                 if (!periodo) {
-                    mostrarAlerta('Debes seleccionar un periodo.');
+                    Swal.fire({
+                        title: 'Atención',
+                        text: 'Debes seleccionar un periodo.',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
                     return;
                 }
 
                 if (!comentarios) {
-                    mostrarAlerta('Debes escribir comentarios.');
+                    Swal.fire({
+                        title: 'Atención',
+                        text: 'Debes escribir comentarios.',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
                     return;
+                }
+
+                // Mostrar loader
+                if (loader) {
+                    loader.style.display = 'flex';
                 }
 
                 try {
@@ -310,6 +327,11 @@
 
                     const data = await resp.json();
 
+                    // Ocultar loader
+                    if (loader) {
+                        loader.style.display = 'none';
+                    }
+
                     // Cerrar modal
                     modalOverlay.style.display = 'none';
 
@@ -317,22 +339,43 @@
                     selectPeriodo.value = '';
                     textareaComentarios.value = '';
 
-                    if (data.ok) {
-                        mostrarAlerta(data.mensaje || 'El correo se envió correctamente.');
+                    if (data.status === 'success') {
+                        Swal.fire({
+                            title: '¡Correo enviado!',
+                            text: data.mensaje || 'El correo se envió correctamente.',
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        });
                     } else {
-                        mostrarAlerta(data.mensaje || 'No se pudo enviar el correo.');
+                        Swal.fire({
+                            title: 'No se pudo enviar el correo',
+                            text: data.mensaje || 'Ocurrió un problema al enviar el correo.',
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
                     }
 
                 } catch (error) {
+                    console.error(error);
+
+                    // Ocultar loader
+                    if (loader) {
+                        loader.style.display = 'none';
+                    }
+
+                    // Cerrar modal por si quedó abierto
                     modalOverlay.style.display = 'none';
-                    mostrarAlerta('Ocurrió un error inesperado al enviar el correo.');
+
+                    Swal.fire({
+                        title: 'Lo sentimos',
+                        text: 'Ocurrió un error inesperado al enviar el correo. Intenta nuevamente.',
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
                 }
             });
 
-            function mostrarAlerta(mensaje) {
-                alertaMensaje.textContent = mensaje;
-                alertaOverlay.style.display = 'flex';
-            }
+
         })();
     </script>
 

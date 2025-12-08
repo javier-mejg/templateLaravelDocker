@@ -2,7 +2,11 @@
     'correoApelaciones',   // correo destino
     'periodos' => [],      // lista de periodos
     'action'   => null,    // ruta para el POST
+    'nombreUsuario' => null,
+    'idUsuario' => null,
+    'correoUsuario' => null,
 ])
+
 
 <div>
     {{-- Overlay del modal --}}
@@ -30,6 +34,11 @@
                 {{-- Destinatario oculto --}}
                 <input type="hidden" name="correo_apelaciones" value="{{ $correoApelaciones }}">
 
+                {{-- Datos del usuario (ocultos) --}}
+                <input type="hidden" name="nombre_usuario" value="{{ $nombreUsuario }}">
+                <input type="hidden" name="id_usuario" value="{{ $idUsuario }}">
+                <input type="hidden" name="correo_usuario" value="{{ $correoUsuario }}">
+
                 {{-- Periodo --}}
                 <div style="margin-bottom: 15px;">
                     <label for="select-periodo" style="display:block; font-weight: 600;">
@@ -38,10 +47,9 @@
                     <select
                         id="select-periodo"
                         name="periodo"
-                        class="form-select"
-                        style="width: 100%; padding: 6px;"
+                        class="form-control"
                     >
-                        <option value="">-- Selecciona un periodo --</option>
+                        <option class="row justify-content-center" value="">-- Selecciona un periodo --</option>
                         @foreach ($periodos as $periodo)
                             <option value="{{ $periodo }}">{{ $periodo }}</option>
                         @endforeach
@@ -83,32 +91,4 @@
         </div>
     </div>
 
-    {{-- Alerta personalizada --}}
-    <div
-        id="alerta-overlay"
-        style="display: none;
-               position: fixed;
-               top: 0; left: 0; right: 0; bottom: 0;
-               background: rgba(0,0,0,0.5);
-               justify-content: center;
-               align-items: center;"
-    >
-        <div
-            style="background: #fff;
-                   padding: 20px;
-                   border-radius: 8px;
-                   width: 100%;
-                   max-width: 400px;
-                   text-align: center;"
-        >
-            <p id="alerta-mensaje" style="margin-bottom: 20px;"></p>
-            <button
-                type="button"
-                id="btn-alerta-aceptar"
-                class="btn btn-primary"
-            >
-                Aceptar
-            </button>
-        </div>
-    </div>
 </div>
